@@ -10,7 +10,7 @@ import os.path as osp
 from codes.metrics import MaskoutMetric, XCollector
 import time
 from codes.GNNmodels import GnnNets
-from codes.gflownet.utils import get_gnnModel_params
+from codes.ModelLevelExplainer.utils import get_gnnModel_params
 from codes.load_dataset import get_dataset, get_dataloader
 from torch_geometric.data import Data
 from torch_geometric.utils import to_networkx
@@ -21,8 +21,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Pretrain ReFine")
     parser.add_argument('--cuda', type=int, default=0,
                         help='GPU device.')
-    parser.add_argument('--dataset_root', type=str, default='/mnt/8T/torch_projects/datasets')
-    parser.add_argument('--dataset_name', type=str, default='NCI1',
+    parser.add_argument('--dataset_root', type=str, default='datasets')
+    parser.add_argument('--dataset_name', type=str, default='BA_4Motifs',
                         choices=['BA_4Motifs', 'Mutagenicity_full', 'NCI1', 'PROTEINS'])
     parser.add_argument('--result_dir', type=str, default="results/",
                         help='Result directory.')
@@ -251,7 +251,7 @@ def test():
     ft_log.close()
 
 
-test_flag = True
+test_flag = False
 plot_flag = False
 seed = 2023
 torch.manual_seed(seed)

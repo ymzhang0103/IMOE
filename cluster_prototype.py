@@ -1,9 +1,9 @@
 import torch
 import argparse
 
-from codes.gflownet.environment import Environment, class_prob_reward
-from codes.gflownet.backbone import GCNBackbone
-from codes.gflownet.gflownet_wrapper import GFlowNet
+from codes.ModelLevelExplainer.environment import Environment, class_prob_reward
+from codes.ModelLevelExplainer.backbone import GCNBackbone
+from codes.ModelLevelExplainer.gflownet_wrapper import GFlowNet
 import networkx as nx
 import os
 import os.path as osp
@@ -14,7 +14,7 @@ from torch_geometric.utils import to_networkx
 from umap import UMAP
 from sklearn.cluster import DBSCAN, KMeans
 from codes.GNNmodels import GnnNets
-from codes.gflownet.utils import get_gnnModel_params
+from codes.ModelLevelExplainer.utils import get_gnnModel_params
 import matplotlib
 matplotlib.use("Agg")
 
