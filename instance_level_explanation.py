@@ -262,7 +262,9 @@ top_ratio_list = [i * 0.01 for i in args.topk_arr]
 args.device = torch.device(f"cuda:{args.cuda}" if torch.cuda.is_available() else "cpu")
 #args.device="cpu"
 args.cluster_algorithm = "DBSCAN"   #KMeans, DBSCAN
-args.km_n = 6
+if args.cluster_algorithm == "KMeans":
+    args.km_n = 6
+args.l = 2
 
 if args.dataset_name == "BA_4Motifs":
     args.lr = 0.005
@@ -272,12 +274,12 @@ if args.dataset_name == "BA_4Motifs":
 lr_str = str(args.lr).replace(".","")
 ratio_str = str(args.ratio).replace(".","")
 
-model_dir = f"models/instance_level_explainer/{args.dataset_name}_lr{lr_str}_epoch{args.epoch}_k{ratio_str}_sizemean_seed{seed}_{args.cluster_algorithm}/"
+model_dir = f"models/instance_level_explainer/{args.dataset_name}_lr{lr_str}_epoch{args.epoch}_k{ratio_str}_sizemean_seed{seed}_{args.cluster_algorithm}_top{args.l}/"
 if args.cluster_algorithm == "KMeans":
     model_dir = f"{model_dir}/km{args.km_n}/"
 os.makedirs(model_dir, exist_ok=True)
 
-log_dir = f"log/instance_level_explanation_{args.dataset_name}_lr{lr_str}_epoch{args.epoch}_k{ratio_str}_sizemean_seed{seed}_{args.cluster_algorithm}"
+log_dir = f"log/instance_level_explanation_{args.dataset_name}_lr{lr_str}_epoch{args.epoch}_k{ratio_str}_sizemean_seed{seed}_{args.cluster_algorithm}_top{args.l}"
 if args.cluster_algorithm == "KMeans":
     log_dir = f"{log_dir}/km{args.km_n}"
 os.makedirs(log_dir, exist_ok=True)
@@ -378,7 +380,7 @@ if not test_flag:
             if graphid not in train_instances:
                 continue
             label_graphs = cluster_center_dic[g.y.item()]
-            edge_mask, fl, ll, sim = instanceLevelExplainer.explain(g, label_graphs, ratio=args.ratio)
+            edge_mask, fl, ll, sim = instanceLevelExplainer.explain(g, label_graphs, l=args.l)
             #print("imp, ", imp)
             imp_log.write("imp,{}\n".format(edge_mask.detach().cpu().numpy() ))
             imp_log.write("sim,{}\n".format(sim))

@@ -199,7 +199,7 @@ class InstanceLevelExplainer(nn.Module):
         return entropy
 
 
-    def explain(self, graph, label_graphs, ratio=1.0, lr=1e-4, epoch=50, draw_graph=0, vis_ratio=0.2):
+    def explain(self, graph, label_graphs, l=2):
         edge_mask = self.mask_net(
             graph.x,
             graph.edge_index,
@@ -219,7 +219,9 @@ class InstanceLevelExplainer(nn.Module):
         for label_g_emb in label_graphs:
             sim = torch.cosine_similarity(G1_emb, torch.Tensor(label_g_emb).to(G1_emb.device))
             graph_similarity.append(sim)
-        label_loss = min([1/s for s in graph_similarity])
+        s_list = [1/s for s in graph_similarity]
+        s_list.sort()
+        label_loss = sum(s_list[:l])
 
         imp = edge_mask.detach().cpu().numpy() 
         self.last_result = (graph, imp)
